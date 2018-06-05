@@ -1,8 +1,8 @@
 
 import PureData from  '../lib/Data'
-import AppData from './App.data'
+import {AppData} from './App.data'
 import * as React from 'react'
-import RowData from './Row.data'
+
 import Row from './Row'
 export default class App extends PureData.Component<AppData>{
     constructor(props:any,context:any){
@@ -17,7 +17,7 @@ export default class App extends PureData.Component<AppData>{
         }
         return <div>
                 <h1>{this.props.data.name}</h1>
-                <table>
+                <table style={{border:'1px solid red'}} cellSpacing={20}>
                     <tbody>
                         {rows}
                     </tbody>

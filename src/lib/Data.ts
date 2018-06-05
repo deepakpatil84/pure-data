@@ -6,10 +6,10 @@ namespace PureData {
     export class Data {
 
         private callbacks: UpdateCallback[]
-        private updated: boolean
+        private modified: boolean
         constructor() {
             this.callbacks = []
-            this.updated = false
+            this.modified = false
         }
         on(callback: UpdateCallback) {
             this.callbacks.push(callback)
@@ -25,61 +25,57 @@ namespace PureData {
                 callback()
             }
         }
-        protected setUpdated(value: boolean) {
-            if (value == true && this.updated == false) {
+        protected setModified(value: boolean) {
+            if (value == true && this.modified == false) {
                 Data.scheduleUpdate(this)
             }
-            this.updated = value
+            this.modified = value
         }
-        isModified() {
-            return this.updated;
-        }
-
 
         private static waitingForSchedular: boolean = false
         private static updates: Data[] = []
-        static globalUpdate: any
         protected static scheduleUpdate(obj: Data) {
             Data.updates.push(obj)
             if (!Data.waitingForSchedular) {
                 Data.waitingForSchedular = true
                 setTimeout(function () {
+                    //NOTE: no clear justication about why we are doing it in two phases
                     for (let obj of Data.updates) {
                         obj.triggerUpdate()
                     }
-                    Data.globalUpdate()
                     while (obj = Data.updates.shift()) {
-                        obj.setUpdated(false)
+                        obj.setModified(false)
                     }
                     Data.waitingForSchedular = false
                 }, 0)
             }
         }
         set<K extends keyof this>(props: Pick<this, K>): this {
-            let updated = false
+            let modified = false
             for (let k in props) {
                 if (this[k] !== props[k]) {
                     this[k] = props[k]
-                    updated = true
+                    modified = true
                 }
             }
-            updated && this.setUpdated(true)
+            modified && this.setModified(true)
             return this
         }
 
     }
-    type ReadonlyData<T> = {
+    export type ReadonlyData<T> = {
         readonly [P in keyof T]: T[P] extends Data ? ReadonlyData<T[P]> : T[P]
     };
 
-    type IProp<P extends Data> = {
+    type IProp<P> = {
         parent: Component<Data>
-        data: P
+        data: ReadonlyData<P>
+        onUpdate?: UpdateCallback
     };
 
-    export class Component<P extends Data, A = {}> extends React.Component<A & IProp<P>>{
+    export abstract class Component<P extends Data, A = {}> extends React.Component<A &  IProp<P>>{
         private pureCompChilds: Component<P>[]
-        private update: boolean = true
+        private update: boolean = false
         constructor(props: A & IProp<P>, context: any) {
             super(props, context)
             this.pureCompChilds = []
@@ -87,12 +83,10 @@ namespace PureData {
                 this.props.parent.addChild(this)
             }
             if (this.props.data) {
-                this.onDataUpdate = this.onDataUpdate.bind(this)
-                this.props.data.on(this.onDataUpdate)
+                this.onDataUpdate = this.onDataUpdate.bind(this);
+                //TODO: why we need any here
+                (this.props.data as any).on(this.onDataUpdate)
             }
-        }
-        componentDidMount() {
-            this.update = false
         }
         componentDidUpdate() {
             this.update = false
@@ -100,18 +94,24 @@ namespace PureData {
         shouldComponentUpdate() {
             return this.update
         }
-        onDataUpdate() {
+        onDataUpdate():void {
             if (!this.update) {
                 this.update = true
-                if(this.props.parent){
+                if (this.props.onUpdate) {
+                    this.props.onUpdate()
+                }
+                if (this.props.parent) {
                     this.props.parent.onChildUpdate()
                 }
             }
         }
-        onChildUpdate(){
-            if(!this.update){
+        onChildUpdate() {
+            if (!this.update) {
                 this.update = true
-                if(this.props.parent){
+                if (this.props.onUpdate) {
+                    this.props.onUpdate()
+                }
+                if (this.props.parent) {
                     this.props.parent.onChildUpdate()
                 }
             }
