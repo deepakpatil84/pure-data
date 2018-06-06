@@ -20,7 +20,7 @@ namespace PureData {
                 this.callbacks.splice(index, 1)
             }
         }
-        triggerUpdate() {
+        private triggerUpdate() {
             for (let callback of this.callbacks) {
                 callback()
             }
@@ -73,7 +73,7 @@ namespace PureData {
         onUpdate?: UpdateCallback
     };
 
-    export abstract class Component<P extends Data, A = {}> extends React.Component<A &  IProp<P>>{
+    export abstract class Component<P extends Data, A = {}, S ={}> extends React.Component<A & IProp<P>, S>{
         private pureCompChilds: Component<P>[]
         private update: boolean = false
         constructor(props: A & IProp<P>, context: any) {
@@ -94,7 +94,24 @@ namespace PureData {
         shouldComponentUpdate() {
             return this.update
         }
-        onDataUpdate():void {
+        setState<K extends keyof S>(props: Pick<S, K>) {
+            let needUpdate = false
+            let state = this.state;
+            for (let k in props) {
+                if (state[k] !== props[k]) {
+                    (state as any)[k] = props[k]
+                    needUpdate = true
+                }
+            }
+            if(needUpdate){
+                this.update = true
+                if (this.props.parent) {
+                    this.props.parent.onChildUpdate()
+                }
+            }
+            return this
+        }
+        onDataUpdate(): void {
             if (!this.update) {
                 this.update = true
                 if (this.props.onUpdate) {
@@ -126,27 +143,6 @@ namespace PureData {
             }
         }
     }
-
-    /// test
-    class Info extends Data {
-        url: string
-    }
-    class User extends Data {
-        name: string
-        sessionKey: string
-        info: Info
-    }
-
-
-    class App extends Data {
-        user: User
-        loggin: boolean
-        setLogin() {
-            this.loggin = false;
-        }
-    }
-    const i: ReadonlyData<App> = new App
-
 
 }
 export default PureData;

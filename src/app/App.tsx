@@ -1,5 +1,5 @@
 
-import PureData from  '../lib/Data'
+import PureData from  '../lib/PureData'
 import {AppData} from './App.data'
 import * as React from 'react'
 

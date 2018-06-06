@@ -1,4 +1,4 @@
-import PureData from  '../lib/Data'
+import PureData from  '../lib/PureData'
 export class RowData extends PureData.Data{
     firstName: String = 'First Name'
     lastName: String = 'Last Name'
