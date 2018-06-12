@@ -2,15 +2,14 @@
   "name": "pure-data",
   "version": "0.0.1",
   "description": "Pure Data Design Pattern Test Application",
-  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "webpack-dev-server"
   },
   "author": "Deepak Patil",
   "license": "MIT",
-  "main":"./src/index.ts",
-
+  "main": "./dist/index.js",
+  "typings": "./dist/index.d.ts",
   "devDependencies": {
     "@types/prop-types": "^15.5.3",
     "awesome-typescript-loader": "^5.0.0",
@@ -25,8 +24,6 @@
   },
   "dependencies": {
     "@types/react": "^16.3.16",
-    "@types/react-dom": "^16.0.5",
-    "react": "^16.4.0",
-    "react-dom": "^16.4.0"
+    "react": "^16.4.0"
   }
 }
