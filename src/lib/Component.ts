@@ -1,8 +1,8 @@
 import * as React from 'react'
 
-import { Data, UpdateCallback } from './Data'
+import Data, { UpdateCallback } from './Data'
 
-type ReadonlyData<T> =
+export type ReadonlyData<T> =
     T extends Function ? T :
     T extends Array<any> ? ReadonlyDataArray<T[any]> :
     T extends Object ? ReadonlyDataObject<T> :
@@ -10,15 +10,15 @@ type ReadonlyData<T> =
 
 interface ReadonlyDataArray<T> extends ReadonlyArray<ReadonlyData<T>> { }
 
-type ReadonlyDataObject<T> = { readonly [P in keyof T]: ReadonlyData<T[P]> };
+type ReadonlyDataObject<T> = { readonly [P in keyof T]: ReadonlyData<T[P]> }
 
 type IProp<P> = {
     parent: Component<Data>
     data: ReadonlyData<P>
-    onUpdate?: UpdateCallback
+    onUpdate?: ()=>void
 };
 
-export abstract class Component<P extends Data, A = {}, S ={}> extends React.Component<A & IProp<P>, S>{
+export default abstract class Component<P extends Data, A = {}, S ={}> extends React.Component<A & IProp<P>, S>{
 
     private pureCompChilds: Component<P>[]
     private update: boolean = false
@@ -32,6 +32,8 @@ export abstract class Component<P extends Data, A = {}, S ={}> extends React.Com
         if (this.props.data) {
             this.onDataUpdate = this.onDataUpdate.bind(this);
             this.props.data.on(this.onDataUpdate)
+        }else{
+            throw new Error('[PureData] PureData.Component data can not be null')
         }
     }
 
@@ -63,7 +65,7 @@ export abstract class Component<P extends Data, A = {}, S ={}> extends React.Com
         return this
     }
 
-    onDataUpdate(): void {
+    onDataUpdate(data: ReadonlyData<P>): void {
         if (!this.update) {
             this.update = true
             if (this.props.onUpdate) {

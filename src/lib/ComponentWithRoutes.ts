@@ -1,12 +1,12 @@
 import * as React from 'react'
 import * as PropTypes from 'prop-types'
-import { Data } from './Data'
-import { Component } from './Component'
+import Data  from './Data'
+import Component  from './Component'
 
 interface IComponentWithRoutesState {
     routePath: string
 }
-export abstract class ComponentWithRoutes<P extends Data, A = {}, S extends IComponentWithRoutesState= { routePath: '' }> extends Component<P, A, S>{
+export default abstract class ComponentWithRoutes<P extends Data, A = {}, S extends IComponentWithRoutesState= { routePath: '' }> extends Component<P, A, S>{
     static contextTypes = {
         router: PropTypes.shape({
             route: PropTypes.object.isRequired
