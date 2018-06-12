@@ -9,6 +9,8 @@
   },
   "author": "Deepak Patil",
   "license": "MIT",
+  "main":"./src/index.ts",
+
   "devDependencies": {
     "@types/prop-types": "^15.5.3",
     "awesome-typescript-loader": "^5.0.0",

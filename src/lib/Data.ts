@@ -45,12 +45,11 @@ export class Data {
         }
     }
     setModified(value: boolean) {
-        if (value == true && this._modified == false) {
+        if (value === true && this._modified === false) {
             DataManager.scheduleUpdate(this)
         }
         this._modified = value
     }
-
 
     set<K extends keyof this>(props: Pick<this, K>): this {
         let modified = false
