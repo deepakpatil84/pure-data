@@ -1,8 +1,0 @@
-import PureData from  '../lib/PureData'
-export class RowData extends PureData.Data{
-    firstName: String = 'First Name'
-    lastName: String = 'Last Name'
-    email: String = 'email@domain.com'
-    userName: String = 'user1'
-    index: number = 0
-}
