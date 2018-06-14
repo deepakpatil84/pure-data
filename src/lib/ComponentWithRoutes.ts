@@ -6,7 +6,7 @@ import Component  from './Component'
 interface IComponentWithRoutesState {
     routePath: string
 }
-export default abstract class ComponentWithRoutes<P extends Data, A = {}, S extends IComponentWithRoutesState= { routePath: '' }> extends Component<P, A, S>{
+export default abstract class ComponentWithRoutes<P extends Data, A = {}, S = {}> extends Component<P, A, S & IComponentWithRoutesState>{
     static contextTypes = {
         router: PropTypes.shape({
             route: PropTypes.object.isRequired

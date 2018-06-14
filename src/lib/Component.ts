@@ -55,7 +55,6 @@ export default abstract class Component<P extends Data, A = {}, S ={}> extends R
             }
         }
 
-
         if (needUpdate) {
             this.update = true
             if (this.props.parent) {

@@ -11,19 +11,17 @@ class DataManager {
         if (!DataManager.waitingForSchedular) {
             DataManager.waitingForSchedular = true
             setTimeout(function () {
-                //NOTE: no clear justication about why we are doing it in two phases
                 for (let obj of DataManager.updates) {
+                    obj.setModified(false)
                     obj.triggerUpdate()
                 }
-                while (obj = DataManager.updates.shift()) {
-                    obj.setModified(false)
-                }
+                DataManager.updates.length = 0
                 DataManager.waitingForSchedular = false
             }, 0)
         }
     }
 }
-export default class Data {
+export default abstract class Data {
 
     private _callbacks: UpdateCallback<ReadonlyData<this>>[]
     private _modified: boolean
