@@ -1,6 +1,8 @@
 ### Working on readme ###
 # PureData
 Scalable,Reusable,Simple and Predictable state management
+[![Build Status](https://travis-ci.org/deepakpatil84/pure-data.svg?branch=master)](https://travis-ci.org/deepakpatil84/pure-data)
+[![Coverage Status](https://coveralls.io/repos/mobxjs/mobx/badge.svg?branch=master&service=github)](https://coveralls.io/github/mobxjs/mobx?branch=master)
 
 ### Prerequisites
 You should have basic understanding of front end application architectures. Not must but if you know Flux,Redux or MobX that will help to evalute to PureData. Knowledge of typescript will also help in understanding and developing PureData applications.
