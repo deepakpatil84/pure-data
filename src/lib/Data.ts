@@ -10,12 +10,13 @@ class DataManager {
         DataManager.updates.push(obj)
         if (!DataManager.waitingForSchedular) {
             DataManager.waitingForSchedular = true
+            let currentUpdates = DataManager.updates.slice()
+            DataManager.updates.length = 0
             setTimeout(function () {
-                for (let obj of DataManager.updates) {
+                for (let obj of currentUpdates) {
                     obj.setModified(false)
                     obj.triggerUpdate()
                 }
-                DataManager.updates.length = 0
                 DataManager.waitingForSchedular = false
             }, 0)
         }

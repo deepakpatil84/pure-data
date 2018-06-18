@@ -1,8 +1,8 @@
-import { expect } from 'chai';
+
 
 import Data from '../../src/lib/Data'
 
-describe('exports', () => {
+describe('Data', () => {
     class ExData extends Data {
         testString: string = 'hello'
         testObject = {
@@ -12,50 +12,54 @@ describe('exports', () => {
     let instance: ExData = null;
     beforeEach(() => {
         instance = new ExData();
+        jest.useFakeTimers()
     })
+
     it('should be able to set the value', () => {
-        expect(instance.testString).to.equal('hello')
+        expect(instance.testString).toEqual('hello')
         instance.set({ testString: 'hi' })
-        expect(instance.testString).to.equal('hi')
+        expect(instance.testString).toEqual('hi')
     })
-    it('should trigger update on setting value', (callback) => {
+
+    it('should trigger update on setting value', () => {
         instance.on(() => {
-            expect(instance.testString).to.equal('hi')
-            callback()
+            expect(instance.testString).toEqual('hi')
         })
         instance.set({ testString: 'hi' })
+        jest.runAllTimers()
     })
-    it('should not trigger update on setting same value', (callback) => {
-        expect(instance.testString).to.equal('hello')
+
+    it('should not trigger update on setting same value', () => {
+        expect(instance.testString).toEqual('hello')
         instance.on(fail)
         instance.set({ testString: 'hello' })
-        setTimeout(callback, 2)//give a chance to execure callback
+        jest.runAllTimers()
     })
-    it('should able off the update callbanck', (callback) => {
+    it('should able turn off the update callback', () => {
         let expectingUpdate = true
 
         let updateCallback = () => {
             if (expectingUpdate) {
-                expect(instance.testString).to.equal('hi')
+                expect(instance.testString).toEqual('hi')
                 expectingUpdate = false
                 instance.off(updateCallback)
                 instance.set({ testString: 'hello' })
-                setTimeout(callback, 2)
+                jest.runAllTimers()
             } else {
                 fail()
             }
-
         }
         //trying to remove callback isnt there
         instance.off(updateCallback)
         instance.on(updateCallback)
-        expect(instance.testString).to.equal('hello')
+        expect(instance.testString).toEqual('hello')
         instance.set({ testString: 'hi' })
+        jest.runAllTimers()
     })
-    it('multiple set should trigger only one update',(callback)=>{
+    it('multiple set for same value should trigger only one update',()=>{
         let updateCallbackCount = 0;
         let updateCallback = ()=>{
-            expect(instance.testString).to.equal(2)
+            expect(instance.testString).toEqual('2')
             updateCallbackCount++;
         }
         instance.on(updateCallback)
@@ -65,9 +69,20 @@ describe('exports', () => {
         let anotherInstance = new ExData()
         anotherInstance.on(()=>{})
         anotherInstance.set({testString:'3'})
-        setTimeout(()=>{
-            expect(updateCallbackCount).to.equal(1)
-            callback()
-        },2)
+        jest.runAllTimers()
+        expect(updateCallbackCount).toEqual(1)
     })
+    it('should be able to set multiple callbacks',()=>{
+        let counter = 0
+        instance.on(()=>{
+            counter++;
+        })
+        instance.on(()=>{
+            counter++;
+        })
+        instance.set({testString:'4'})
+        jest.runAllTimers()
+        expect(counter).toEqual(2)
+    })
+
 })

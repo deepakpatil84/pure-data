@@ -36,10 +36,16 @@ export default abstract class Component<P extends Data, A = {}, S ={}> extends R
             throw new Error('[PureData] PureData.Component data can not be null')
         }
     }
+    componentWillUnmount(){
+        if(this.props.parent){
+            this.props.parent.removeChild(this)
+        }
+    }
 
     componentDidUpdate() {
         this.update = false
     }
+
 
     shouldComponentUpdate(nextProps?: A & IProp<P>, nextState?: S, nextContext?: any) {
         return this.update
@@ -54,8 +60,7 @@ export default abstract class Component<P extends Data, A = {}, S ={}> extends R
                 needUpdate = true
             }
         }
-
-        if (needUpdate) {
+        if (needUpdate && this.update === false) {
             this.update = true
             if (this.props.parent) {
                 this.props.parent.onChildUpdate()
@@ -64,7 +69,7 @@ export default abstract class Component<P extends Data, A = {}, S ={}> extends R
         return this
     }
 
-    onDataUpdate(data: ReadonlyData<P>): void {
+    onDataUpdate(data?: ReadonlyData<P>): void {
         if (!this.update) {
             this.update = true
             if (this.props.onUpdate) {
