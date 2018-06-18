@@ -5,7 +5,9 @@ install:
   - npm i -g npm
   - npm ci
 script:
-  - npm run test
+  - CI=true npm run test
+after_success:
+  - cat ./coverage/lcov.info|./node_modules/coveralls/bin/coveralls.js
 branches:
   only:
     - master
