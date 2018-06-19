@@ -8,11 +8,11 @@ export type ReadonlyData<T> =
     T extends Object ? ReadonlyDataObject<T> :
     T;
 
-interface ReadonlyDataArray<T> extends ReadonlyArray<ReadonlyData<T>> { }
+export interface ReadonlyDataArray<T> extends ReadonlyArray<ReadonlyData<T>> { }
 
-type ReadonlyDataObject<T> = { readonly [P in keyof T]: ReadonlyData<T[P]> }
+export type ReadonlyDataObject<T> = { readonly [P in keyof T]: ReadonlyData<T[P]> }
 
-type IProp<P> = {
+export type IProp<P> = {
     parent: Component<Data>
     data: ReadonlyData<P>
     onUpdate?: ()=>void

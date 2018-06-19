@@ -3,7 +3,7 @@ import * as PropTypes from 'prop-types'
 import Data  from './Data'
 import Component  from './Component'
 
-interface IComponentWithRoutesState {
+export interface IComponentWithRoutesState {
     routePath: string
 }
 export default abstract class ComponentWithRoutes<P extends Data, A = {}, S = {}> extends Component<P, A, S & IComponentWithRoutesState>{
