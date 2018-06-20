@@ -13,7 +13,7 @@ export interface ReadonlyDataArray<T> extends ReadonlyArray<ReadonlyData<T>> { }
 export type ReadonlyDataObject<T> = { readonly [P in keyof T]: ReadonlyData<T[P]> }
 
 export type IProp<P> = {
-    parent: Component<Data>
+    parent: Component<Data> | null
     data: ReadonlyData<P>
     onUpdate?: ()=>void
 };
@@ -47,7 +47,7 @@ export default abstract class Component<P extends Data, A = {}, S ={}> extends R
     }
 
 
-    shouldComponentUpdate(nextProps?: A & IProp<P>, nextState?: S, nextContext?: any) {
+    shouldComponentUpdate(nextProps: Readonly<A & IProp<P>>, nextState: Readonly<S>, nextContext: any) {
         return this.update
     }
 
