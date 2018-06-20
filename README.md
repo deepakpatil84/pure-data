@@ -1,4 +1,6 @@
-Demo: [TODO Sandbox] (https://codesandbox.io/s/03mmpx513p)
+Demo: 
+TODO Sandbox - https://codesandbox.io/s/03mmpx513p
+Source For Sample App - https://github.com/deepakpatil84/pure-data-todo
 # PureData
 Scalable,Reusable,Simple and Predictable state management
 [![Build Status](https://travis-ci.org/deepakpatil84/pure-data.svg?branch=master)](https://travis-ci.org/deepakpatil84/pure-data)
