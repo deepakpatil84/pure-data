@@ -16,21 +16,19 @@ An experience front end architect will create the architecture with following ex
 * Adaptability
 * Stability
 
-One thing to note here is these are expectations from your application architecture not from framework your are using(e.g. AngularJS, ReactJS, VueJS etc). Your should use tools/libraries to achieve these expectations.
+One thing to note here is these are expectations from your application architecture not from framework your are using(e.g. AngularJS, ReactJS, VueJS etc). We should use tools/libraries to achieve these expectations.
 
 ### Introduction
-PureData helps you to keep your data separate from your application logic in order to keep it Pure. Consider you want to write application targeting three platforms desktop,tablet and phone. To start with sign-up screen may look totally different on phone than desktop version. But it will be dealing with same data like email,username,password etc and operation like  signUP and verify for example. So it is very much possible that we can write separate class only for data part for sign-up and write three separate UI classes for each platform which which consume the same data class across the platforms.
+PureData helps you to keep data separate from ui logic in order to keep it Pure. Consider you want to write application targeting three platforms desktop,tablet and phone. To start with sign-up screen may look totally different on phone than desktop version. But it will be dealing with same data like email,username,password etc and operations like signUP and verify for example. So it is very much possible that we can write separate class only for data part for sign-up and write three separate UI classes for each platform which will consume the same data class across the platforms.
 
 Thats good. But here is the real advantage.
-Now imaging if your desktop sign-up has additional field like 'location', you don't need to write the data class from scratch just extend the SignUp data for desktop and add that field, and you are done without need to update other UI classes.
+Now imagine if your desktop sign-up has additional field like 'location', you don't need to write the data class from scratch just extend the SignUp data for desktop and add that field, and you are done without need to update other UI classes.
 
-Apart from above this PureData guarantees the *best possible performance* by controlling the render flow of application
+Apart from above these PureData guarantees the *best possible performance* by controlling the render flow of application.
 
 <img alt="PureData" src="docs/pure-data.png" align="center" />
 
 ### Implementation
-
-I is really small library. It has only around 200 lines. It is kept intentionally small so that you can rewrite it if needed.
 
 To start all you need understand **Data** and **Component**.
 
@@ -46,8 +44,7 @@ export default class TabData extends PureData.Data {
 ```
 
 **Methods**
-*set*: this will be only method you will be frequently. Since component gets a read only access to the data.
-In order to change te
+*set*: set the values to properties
 
 Note: following methods mostly used internally, but available for special use
 *on* - to get callback on any change to data
@@ -57,8 +54,8 @@ Note: following methods mostly used internally, but available for special use
 
 #### Component ####
 
-Components consume *Data* . Render will be called on data updates. You can update the data by calling set function.
-Data can be accessed through props in component. Component can also have state and additional properties.
+Components consume *Data* . Render will be called on data updates. You can update the data by calling *set* function.
+Data can be accessed through props in component. Also Component can have state and additional properties.
 ```
 
 import * as PureData from 'pure-data'
@@ -90,6 +87,7 @@ export default class Tab extends PureData.Component<TabData>{
 You will need a root component to control re-rendering of application, its a standard react component which host the PureData.Component
 ```
 import AppData from './App.data'
+//App is a PureData component
 import App from './App'
 import { HashRouter } from 'react-router-dom'
 import * as React from 'react'
